@@ -1,0 +1,244 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+
+
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+    <title>galeriaArte</title>
+    <style>
+        ::-webkit-scrollbar {
+            width: 10px;
+        }
+
+
+        ::-webkit-scrollbar-track {
+            background: #f1f1f1;
+        }
+
+
+        ::-webkit-scrollbar-thumb {
+            background: #888;
+        }
+
+
+        ::-webkit-scrollbar-thumb:hover {
+            background: #555;
+        }
+    </style>
+
+    <style>
+        body {
+            width: 100%;
+            height: 100%;
+            margin: 4px, 4px 4px, 4px;
+        }
+
+        .idboximg {
+            width: 200px;
+            height: 200px;
+        }
+
+        #idpanel {
+            width: 100%;
+            height: 100%;
+        }
+
+        #idpanel {
+
+            position: absolute;
+            width: 80%;
+            height: 80%;
+            left: 10%;
+            top: 10%;
+
+        }
+        #idpnaelsub{
+            position: absolute;
+            width: 100%;
+            height: 100%;
+            
+        }
+
+        .contenedor-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fill, minmax(200px, 1fr));
+            gap: 16px;
+        }
+        #idbtsdraw{
+            position: fixed;
+            bottom: -14px;
+            left: 50%;
+            transform: translate(-50%,-50%);
+            width: 200px;
+            height: 45px;
+            background-color: #000000a9;
+            z-index: 1000;
+
+            display: flex;
+	flex-direction: row;
+	flex-wrap: wrap;
+	justify-content: center;
+	align-items: center;
+	align-content: center;
+    border-radius: 7px;
+
+        }
+
+        .clbotones{
+            width: 90%;
+height: 90%;
+            display: grid; 
+  grid-template-columns: 1fr 1fr 1fr; 
+  grid-template-rows: 1fr; 
+  gap: 0px 0px; 
+            background-color: #929292a9;
+            border-radius: 13px;
+        }
+
+ 
+      
+        .cl{
+            display: flex;
+	flex-direction: row;
+	flex-wrap: nowrap;
+	justify-content: center;
+	align-items: center;
+	align-content: center;
+        }
+        .wh{
+       width: 35px;
+       height: 35px;
+       border: 1px solid #ffffff;
+       background-color: #5555553b;
+        }
+
+        .circle{
+ border-radius: 50%;
+ color: #fdfdfd;
+ font-size: 19px;
+ background-color: #0505058e;
+
+ 
+        }
+        .circle:hover{
+            background-color: #050505fa;
+        }
+.leftcl{
+    position: relative;
+    left: 10px;
+    top: 3px;
+}
+#idb2{
+    color: #ffffff;
+    background-color: #252525;
+}
+
+#idlgalerialabel{
+
+    font-size: 25px;
+    color: #2e2b29;
+}
+ 
+    </style>
+</head>
+
+<body>
+
+  <label id="idlgalerialabel" for="">Galeria AI</label>
+
+
+    <div id="idpanel" class="contenedor-grid">
+        <div class="contenedor-grid" id="idpnaelsub"></div>
+        <div id="idbtsdraw"><div class="clbotones"><div id="idb1" class="cl wh circle leftcl" onclick="btclik1();">-</div> <div id="idb2" class="cl wh   leftcl">17</div><div id="idb3" class="cl wh circle leftcl" onclick="btclik2();">+</div></div></div>
+    </div>
+ 
+
+
+    <script>
+
+
+        function procesarimg(thiss) {
+            console.log(thiss)
+        }
+
+        function crearImagen(src, alt) {
+
+            const divContenedor = document.createElement('div');
+            divContenedor.classList.add('idboximg');
+
+
+            const img = document.createElement('img');
+            img.src = src;
+            img.alt = alt;
+            img.style.width = '100%';
+            img.style.height = '100%';
+
+
+            img.onclick = function () {
+                procesarimg(this);
+            };
+
+
+            divContenedor.appendChild(img);
+
+
+            return divContenedor;
+        }
+        function forlectura(  iniciade=1,n = 15) {
+ 
+
+            let contenedoridpanel = document.getElementById("idpnaelsub");
+            let url = " https://unonibes4a.github.io/newImgs/";
+
+            let count = 1;
+            for (var i = iniciade; i < n+iniciade; i++) {
+                let val = i + 1;
+                let nombre = "i13032025img" + val.toString() + ".jpg";
+           
+                contenedoridpanel.appendChild(crearImagen(url + nombre, nombre));
+                count = count + 1;
+            }
+        }
+
+        var totalImg=680;
+        var limite=parseInt( totalImg/15);
+        console.log(limite);
+        var indexvalues=0;
+        var countbasicoTraerImg=15;
+
+function btclik2(){
+    clearcontenedor()
+    indexvalues=1+indexvalues;
+    if(indexvalues>limite){indexvalues=limite;}
+    print(indexvalues);
+   forlectura( indexvalues*15,15 );
+}
+function btclik1(){
+    clearcontenedor()
+    indexvalues=indexvalues-1;
+    if(indexvalues<0){indexvalues=0};
+    print(indexvalues);
+    forlectura( indexvalues*15,15 );
+    
+}
+
+function clearcontenedor(){
+    document.getElementById("idpnaelsub").innerHTML="";
+}
+
+function print(st){
+    document.getElementById("idb2").innerText=st;
+}
+        window.onload = async () => {
+
+          
+            print(indexvalues);
+            forlectura(1,15);
+        }
+    </script>
+
+</body>
+
+</html>
