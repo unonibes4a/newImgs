@@ -1,244 +1,321 @@
 <!DOCTYPE html>
-<html lang="en">
-
+<html lang="es">
 <head>
     <meta charset="UTF-8">
-
-
-    <meta name="viewport" content="width=device-width, initial-scale=1">
-    <title>galeriaArte</title>
-    <style>
-        ::-webkit-scrollbar {
-            width: 10px;
-        }
-
-
-        ::-webkit-scrollbar-track {
-            background: #f1f1f1;
-        }
-
-
-        ::-webkit-scrollbar-thumb {
-            background: #888;
-        }
-
-
-        ::-webkit-scrollbar-thumb:hover {
-            background: #555;
-        }
-    </style>
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Galería Paginada y Aleatoria - GitHub</title>
 
     <style>
         body {
-            width: 100%;
-            height: 100%;
-            margin: 4px, 4px 4px, 4px;
+            margin: 0;
+            font-family: sans-serif;
+            background-color: #f0f0f0;
         }
 
-        .idboximg {
-            width: 200px;
-            height: 200px;
-        }
-
-        #idpanel {
-            width: 100%;
-            height: 100%;
-        }
-
-        #idpanel {
-
-            position: absolute;
-            width: 80%;
-            height: 80%;
-            left: 10%;
-            top: 10%;
-
-        }
-        #idpnaelsub{
-            position: absolute;
-            width: 100%;
-            height: 100%;
-            
-        }
-
-        .contenedor-grid {
-            display: grid;
-            grid-template-columns: repeat(auto-fill, minmax(200px, 1fr));
-            gap: 16px;
-        }
-        #idbtsdraw{
+        #menusimple {
             position: fixed;
-            bottom: -14px;
+            top: 50%;
+            left: 3%;
+            transform: translate(-50%, -50%);
+            height: auto;
+            min-height: 400px;
+            width: 67px;
+            display: flex;
+            flex-direction: column;
+            justify-content: space-evenly;
+            align-items: center;
+            border-right: 1.5px solid #e5e5e0;
+            box-shadow: 4px 2px 10px 3px rgba(0, 0, 0, 0.23);
+            background-color: #ffffff;
+            z-index: 10;
+        }
+
+        #contenedor {
+            width: 86%;
+            height: 80%;
+            position: fixed;
+            top: 5%;
+            left: 10%;
+            background-color: rgb(255, 255, 255);
+            overflow-y: scroll;
+            display: grid;
+            grid-template-columns: repeat(auto-fill, minmax(240px, 1fr));
+            gap: 20px;
+            padding: 20px;
+            box-sizing: border-box;
+        }
+
+        .contenedordeiamgenes {
+            width: 100%;
+            height: 340px;
+            background-color: #ffffff;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            box-shadow: 0 4px 8px rgba(0,0,0,0.1);
+            border-radius: 8px;
+            position: relative;
+            overflow: hidden;
+        }
+
+        .imgcontenida {
+            width: 100%;
+            height: 100%;
+            object-fit: cover;
+            transition: transform 0.3s ease;
+        }
+
+        .contenedordeiamgenes:hover .imgcontenida {
+            transform: scale(1.05);
+        }
+        
+        .info-imagen {
+            position: absolute;
+            bottom: 0;
+            left: 0;
+            width: 100%;
+            background-color: rgba(0, 0, 0, 0.6);
+            color: white;
+            padding: 10px;
+            box-sizing: border-box;
+            transform: translateY(100%);
+            transition: transform 0.3s ease-in-out;
+            text-align: center;
+        }
+
+        .contenedordeiamgenes:hover .info-imagen {
+            transform: translateY(0);
+        }
+
+        .info-imagen h4 {
+            margin: 0;
+            font-size: 1em;
+        }
+
+        #controlesPaginacion {
+            position: fixed;
+            bottom: 4%;
+            left: 53%;
+            transform: translateX(-50%);
+            text-align: center;
+            width: 86%;
+        }
+
+        #controlesPaginacion button {
+            padding: 10px 20px;
+            font-size: 16px;
+            margin: 0 10px;
+            cursor: pointer;
+            border: 1px solid #ccc;
+            border-radius: 5px;
+            background-color: #efefef;
+        }
+
+        #controlesPaginacion button:disabled {
+            cursor: not-allowed;
+            opacity: 0.5;
+            background-color: #f0f0f0;
+        }
+
+        #cargando {
+            position: fixed;
+            top: 50%;
             left: 50%;
-            transform: translate(-50%,-50%);
-            width: 200px;
-            height: 45px;
-            background-color: #000000a9;
+            transform: translate(-50%, -50%);
+            background-color: rgba(0,0,0,0.8);
+            color: white;
+            padding: 20px;
+            border-radius: 8px;
+            text-align: center;
             z-index: 1000;
-
-            display: flex;
-	flex-direction: row;
-	flex-wrap: wrap;
-	justify-content: center;
-	align-items: center;
-	align-content: center;
-    border-radius: 7px;
-
         }
 
-        .clbotones{
-            width: 90%;
-height: 90%;
-            display: grid; 
-  grid-template-columns: 1fr 1fr 1fr; 
-  grid-template-rows: 1fr; 
-  gap: 0px 0px; 
-            background-color: #929292a9;
-            border-radius: 13px;
+        .error {
+            background-color: #ff4444;
+            color: white;
+            padding: 10px;
+            border-radius: 5px;
+            margin: 10px 0;
         }
 
- 
-      
-        .cl{
-            display: flex;
-	flex-direction: row;
-	flex-wrap: nowrap;
-	justify-content: center;
-	align-items: center;
-	align-content: center;
-        }
-        .wh{
-       width: 35px;
-       height: 35px;
-       border: 1px solid #ffffff;
-       background-color: #5555553b;
-        }
-
-        .circle{
- border-radius: 50%;
- color: #fdfdfd;
- font-size: 19px;
- background-color: #0505058e;
-
- 
-        }
-        .circle:hover{
-            background-color: #050505fa;
-        }
-.leftcl{
-    position: relative;
-    left: 10px;
-    top: 3px;
-}
-#idb2{
-    color: #ffffff;
-    background-color: #252525;
-}
-
-#idlgalerialabel{
-
-    font-size: 25px;
-    color: #2e2b29;
-}
- 
     </style>
 </head>
-
 <body>
 
-  <label id="idlgalerialabel" for="">Galeria AI</label>
-
-
-    <div id="idpanel" class="contenedor-grid">
-        <div class="contenedor-grid" id="idpnaelsub"></div>
-        <div id="idbtsdraw"><div class="clbotones"><div id="idb1" class="cl wh circle leftcl" onclick="btclik1();">-</div> <div id="idb2" class="cl wh   leftcl">17</div><div id="idb3" class="cl wh circle leftcl" onclick="btclik2();">+</div></div></div>
+    <div id="menusimple"></div>
+    <div id="contenedor"></div>
+    <div id="controlesPaginacion">
+        <button id="btnAtras">Atrás</button>
+        <button id="btnAdelantar">Adelantar</button>
+        <button id="btnRecargar">Recargar desde GitHub</button>
     </div>
- 
 
+    <div id="cargando" style="display: none;">
+        <p>Cargando imágenes desde GitHub...</p>
+    </div>
 
     <script>
+        document.addEventListener('DOMContentLoaded', () => {
+            const contenedor = document.getElementById('contenedor');
+            const btnAtras = document.getElementById('btnAtras');
+            const btnAdelantar = document.getElementById('btnAdelantar');
+            const btnRecargar = document.getElementById('btnRecargar');
+            const cargando = document.getElementById('cargando');
 
+            let imagenesAleatorias = [];
+            let paginaActual = 0;
+            const imagenesPorPagina = 15;
 
-        function procesarimg(thiss) {
-            console.log(thiss)
-        }
+            // Configuración del repositorio
+            const repoOwner = 'unonibes4a';
+            const repoName = 'newImgs';
+            const githubApiUrl = `https://api.github.com/repos/${repoOwner}/${repoName}/contents`;
 
-        function crearImagen(src, alt) {
+            // Extensiones de imagen válidas
+            const extensionesValidas = ['.jpg', '.jpeg', '.png', '.gif', '.bmp', '.webp', '.svg'];
 
-            const divContenedor = document.createElement('div');
-            divContenedor.classList.add('idboximg');
-
-
-            const img = document.createElement('img');
-            img.src = src;
-            img.alt = alt;
-            img.style.width = '100%';
-            img.style.height = '100%';
-
-
-            img.onclick = function () {
-                procesarimg(this);
-            };
-
-
-            divContenedor.appendChild(img);
-
-
-            return divContenedor;
-        }
-        function forlectura(  iniciade=1,n = 15) {
- 
-
-            let contenedoridpanel = document.getElementById("idpnaelsub");
-            let url = " https://unonibes4a.github.io/newImgs/";
-
-            let count = 1;
-            for (var i = iniciade; i < n+iniciade; i++) {
-                let val = i + 1;
-                let nombre = "i13032025img" + val.toString() + ".jpg";
-           
-                contenedoridpanel.appendChild(crearImagen(url + nombre, nombre));
-                count = count + 1;
+            function esImagen(nombreArchivo) {
+                const extension = nombreArchivo.toLowerCase().substring(nombreArchivo.lastIndexOf('.'));
+                return extensionesValidas.includes(extension);
             }
-        }
 
-        var totalImg=680;
-        var limite=parseInt( totalImg/15);
-        console.log(limite);
-        var indexvalues=0;
-        var countbasicoTraerImg=15;
+            function obtenerNombreArchivo(path) {
+                return path.split('/').pop().replace(/\.[^/.]+$/, "");
+            }
 
-function btclik2(){
-    clearcontenedor()
-    indexvalues=1+indexvalues;
-    if(indexvalues>limite){indexvalues=limite;}
-    print(indexvalues);
-   forlectura( indexvalues*15,15 );
-}
-function btclik1(){
-    clearcontenedor()
-    indexvalues=indexvalues-1;
-    if(indexvalues<0){indexvalues=0};
-    print(indexvalues);
-    forlectura( indexvalues*15,15 );
-    
-}
+            async function cargarImagenesDesdeGitHub() {
+                cargando.style.display = 'block';
+                try {
+                    const response = await fetch(githubApiUrl);
+                    
+                    if (!response.ok) {
+                        throw new Error(`Error HTTP: ${response.status}`);
+                    }
 
-function clearcontenedor(){
-    document.getElementById("idpnaelsub").innerHTML="";
-}
+                    const data = await response.json();
+                    const imagenes = [];
 
-function print(st){
-    document.getElementById("idb2").innerText=st;
-}
-        window.onload = async () => {
+                    for (const item of data) {
+                        if (item.type === 'file' && esImagen(item.name)) {
+                            imagenes.push({
+                                url: item.download_url,
+                                titulo: obtenerNombreArchivo(item.name),
+                                descripcion: `Imagen desde GitHub: ${item.name}`
+                            });
+                        } else if (item.type === 'dir') {
+                            // Cargar imágenes de subdirectorios
+                            try {
+                                const subResponse = await fetch(item.url);
+                                const subData = await subResponse.json();
+                                
+                                for (const subItem of subData) {
+                                    if (subItem.type === 'file' && esImagen(subItem.name)) {
+                                        imagenes.push({
+                                            url: subItem.download_url,
+                                            titulo: obtenerNombreArchivo(subItem.name),
+                                            descripcion: `Imagen desde GitHub: ${item.name}/${subItem.name}`
+                                        });
+                                    }
+                                }
+                            } catch (error) {
+                                console.warn(`Error cargando subdirectorio ${item.name}:`, error);
+                            }
+                        }
+                    }
 
-          
-            print(indexvalues);
-            forlectura(1,15);
-        }
+                    if (imagenes.length === 0) {
+                        throw new Error('No se encontraron imágenes en el repositorio');
+                    }
+
+                    return imagenes;
+
+                } catch (error) {
+                    console.error('Error cargando imágenes desde GitHub:', error);
+                    contenedor.innerHTML = `<div class="error">Error cargando imágenes desde GitHub: ${error.message}</div>`;
+                    return [];
+                } finally {
+                    cargando.style.display = 'none';
+                }
+            }
+
+            function barajarArray(array) {
+                for (let i = array.length - 1; i > 0; i--) {
+                    const j = Math.floor(Math.random() * (i + 1));
+                    [array[i], array[j]] = [array[j], array[i]];
+                }
+                return array;
+            }
+
+            function actualizarBotones() {
+                btnAtras.disabled = (paginaActual === 0);
+                const totalPaginas = Math.ceil(imagenesAleatorias.length / imagenesPorPagina);
+                btnAdelantar.disabled = (paginaActual >= totalPaginas - 1);
+            }
+
+            function mostrarPagina(pagina) {
+                contenedor.innerHTML = '';
+                
+                const inicio = pagina * imagenesPorPagina;
+                const fin = inicio + imagenesPorPagina;
+                const imagenesParaMostrar = imagenesAleatorias.slice(inicio, fin);
+
+                const fragmento = document.createDocumentFragment();
+
+                imagenesParaMostrar.forEach(imageData => {
+                    const divContenedor = document.createElement('div');
+                    divContenedor.className = 'contenedordeiamgenes';
+
+                    const imgElemento = document.createElement('img');
+                    imgElemento.className = 'imgcontenida';
+                    imgElemento.src = imageData.url;
+                    imgElemento.alt = imageData.titulo;
+                    
+                    // Manejo de errores de carga de imagen
+                    imgElemento.onerror = function() {
+                        this.src = 'data:image/svg+xml,%3Csvg xmlns="http://www.w3.org/2000/svg" width="240" height="340" viewBox="0 0 240 340"%3E%3Crect width="240" height="340" fill="%23f0f0f0"/%3E%3Ctext x="120" y="170" text-anchor="middle" fill="%23999" font-family="Arial, sans-serif" font-size="14"%3EImagen no disponible%3C/text%3E%3C/svg%3E';
+                    };
+
+                    const infoDiv = document.createElement('div');
+                    infoDiv.className = 'info-imagen';
+                    infoDiv.innerHTML = `<h4>${imageData.titulo}</h4>`;
+
+                    divContenedor.appendChild(imgElemento);
+                    divContenedor.appendChild(infoDiv);
+                    fragmento.appendChild(divContenedor);
+                });
+
+                contenedor.appendChild(fragmento);
+                actualizarBotones();
+            }
+            
+            btnAdelantar.addEventListener('click', () => {
+                paginaActual++;
+                mostrarPagina(paginaActual);
+            });
+
+            btnAtras.addEventListener('click', () => {
+                paginaActual--;
+                mostrarPagina(paginaActual);
+            });
+
+            btnRecargar.addEventListener('click', () => {
+                iniciarGaleria();
+            });
+
+            async function iniciarGaleria() {
+                const imagenes = await cargarImagenesDesdeGitHub();
+                
+                if (imagenes.length > 0) {
+                    imagenesAleatorias = barajarArray([...imagenes]);
+                    paginaActual = 0;
+                    mostrarPagina(paginaActual);
+                }
+            }
+
+            // Iniciar la galería
+            iniciarGaleria();
+        });
     </script>
 
 </body>
-
 </html>
