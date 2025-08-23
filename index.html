@@ -199,7 +199,7 @@
         document.addEventListener('DOMContentLoaded', () => {
             const contenedor = document.getElementById('contenedor');
             const btnAtras = document.getElementById('btnAtras');
-            const btnAdelantar = document.getElementById('btnAdelantar');
+            //const btnAdelantar = document.getElementById('btnAdelantar');
             const btnRecargar = document.getElementById('btnRecargar');
             const cargando = document.getElementById('cargando');
 
@@ -306,7 +306,7 @@
             function actualizarBotones() {
                 btnAtras.disabled = (paginaActual === 0);
                 const totalPaginas = Math.ceil(imagenesAleatorias.length / imagenesPorPagina);
-                btnAdelantar.disabled = (paginaActual >= totalPaginas - 1);
+              //  btnAdelantar.disabled = (paginaActual >= totalPaginas - 1);
             }
 
             function mostrarPagina(pagina) {
@@ -349,10 +349,10 @@
                 actualizarBotones();
             }
             
-            btnAdelantar.addEventListener('click', () => {
+            /* btnAdelantar.addEventListener('click', () => {
                 paginaActual++;
                 mostrarPagina(paginaActual);
-            });
+            }); */
 
             btnAtras.addEventListener('click', () => {
                 paginaActual--;
