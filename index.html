@@ -201,10 +201,55 @@
             border-radius: 5px;
             font-size: 14px;
         }
+
+        /* VISTA PREVIA HOVER */
+        #vista-previa-hover {
+            position: fixed;
+            width: 500px;
+            height: 500px;
+            background: white;
+            box-shadow: 0 15px 35px rgba(0, 0, 0, 0.3);
+            z-index: 5000;
+            pointer-events: none;
+            opacity: 0;
+            transform: scale(0.8);
+            transition: all 0.3s cubic-bezier(0.25, 0.46, 0.45, 0.94);
+            overflow: hidden;
+        }
+
+        #vista-previa-hover.visible {
+            opacity: 1;
+            transform: scale(1);
+        }
+
+        #vista-previa-hover img {
+            width: 100%;
+            height: 85%;
+            object-fit: cover;
+        }
+
+        #vista-previa-hover .info-preview {
+            height: 15%;
+            padding: 10px;
+            background: #333;
+            color: white;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-weight: 600;
+            font-size: 14px;
+            text-align: center;
+        }
     </style>
 </head>
 <body>
         <div id="idcontendoreditor"><button id="dicloseedit" class="clbtsimpleeditors">close</button></div>
+
+    <!-- Vista previa hover -->
+    <div id="vista-previa-hover">
+        <img id="preview-img" src="" alt="">
+        <div class="info-preview" id="preview-info"></div>
+    </div>
 
     <div id="menusimple"></div>
     <div id="contenedor"></div>
@@ -228,6 +273,11 @@
 
             const btdicloseedit=document.getElementById("dicloseedit");
             btdicloseedit.onclick=()=>{ document.getElementById("idcontendoreditor").style.display="none";}
+            
+            // Elementos para vista previa
+            const vistaPrevia = document.getElementById('vista-previa-hover');
+            const previewImg = document.getElementById('preview-img');
+            const previewInfo = document.getElementById('preview-info');
             
             var editorgiofilter=null;
             let todasLasUrls = []; 
@@ -260,6 +310,64 @@
              
                 
 
+            }
+
+            // Función para posicionar inteligentemente la vista previa
+            function posicionarVistaPrevia(mouseX, mouseY, elementoRect) {
+                const previewWidth = 400;
+                const previewHeight = 400;
+                const margen = 20;
+                
+                const windowWidth = window.innerWidth;
+                const windowHeight = window.innerHeight;
+                
+                let x, y;
+                
+                // Determinar posición X
+                if (mouseX < windowWidth / 2) {
+                    // Mouse en lado izquierdo, mostrar preview a la derecha
+                    x = elementoRect.right + margen;
+                    if (x + previewWidth > windowWidth) {
+                        x = windowWidth - previewWidth - margen;
+                    }
+                } else {
+                    // Mouse en lado derecho, mostrar preview a la izquierda
+                    x = elementoRect.left - previewWidth - margen;
+                    if (x < 0) {
+                        x = margen;
+                    }
+                }
+                
+                // Determinar posición Y
+                y = mouseY - previewHeight / 2;
+                
+                // Ajustar si se sale de los límites verticales
+                if (y < margen) {
+                    y = margen;
+                } else if (y + previewHeight > windowHeight - margen) {
+                    y = windowHeight - previewHeight - margen;
+                }
+                
+                vistaPrevia.style.left = x + 'px';
+                vistaPrevia.style.top = y + 'px';
+            }
+
+            // Función para mostrar vista previa
+            function mostrarVistaPrevia(imgSrc, nombre, mouseEvent, elemento) {
+                previewImg.src = imgSrc;
+                previewInfo.textContent = nombre;
+                
+                const rect = elemento.getBoundingClientRect();
+                posicionarVistaPrevia(mouseEvent.clientX, mouseEvent.clientY, rect);
+                
+                elemento.classList.add('hover-active');
+                vistaPrevia.classList.add('visible');
+            }
+
+            // Función para ocultar vista previa
+            function ocultarVistaPrevia(elemento) {
+                elemento.classList.remove('hover-active');
+                vistaPrevia.classList.remove('visible');
             }
 
 
@@ -377,12 +485,31 @@
                     imgElemento.className = 'imgcontenida';
                     imgElemento.src = imageData.url;
                     imgElemento.alt = imageData.nombre;
+                    
+                    // Click para editar
                     imgElemento.onclick = () => {
                         if(editorgiofilter) {
                             editorgiofilter.changeImgUrl(imgElemento.src);
                             mostraridcontendoreditor();
                         }
                     }
+                    
+                    // Eventos hover para vista previa
+                    divContenedor.onmouseenter = (e) => {
+                        mostrarVistaPrevia(imageData.url, imageData.nombre, e, divContenedor);
+                    };
+                    
+                    divContenedor.onmouseleave = () => {
+                        ocultarVistaPrevia(divContenedor);
+                    };
+                    
+                    // Actualizar posición mientras se mueve el mouse
+                    divContenedor.onmousemove = (e) => {
+                        if (vistaPrevia.classList.contains('visible')) {
+                            const rect = divContenedor.getBoundingClientRect();
+                            posicionarVistaPrevia(e.clientX, e.clientY, rect);
+                        }
+                    };
                     
                     imgElemento.onerror = function() {
                         this.src = 'data:image/svg+xml,%3Csvg xmlns="http://www.w3.org/2000/svg" width="240" height="340" viewBox="0 0 240 340"%3E%3Crect width="240" height="340" fill="%23f0f0f0"/%3E%3Ctext x="120" y="170" text-anchor="middle" fill="%23999" font-family="Arial, sans-serif" font-size="14"%3EImagen no disponible%3C/text%3E%3C/svg%3E';
