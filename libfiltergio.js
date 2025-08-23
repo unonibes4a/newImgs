@@ -17,6 +17,9 @@ this.container=document.getElementById(id);
         this.inyectarEstilosCSS(  'mis-estilos-glfx');
         this.init();
     }
+      changeImgUrl(imgurl){
+        document.getElementById("editorimgz-image").src=imgurl;
+      }
 
       inyectarEstilosCSS=(  idDeLaHoja) =>{
             let hojaDeEstilos = document.getElementById(idDeLaHoja);
@@ -31,7 +34,7 @@ this.container=document.getElementById(id);
                 width: 400px;
                 height: 400px;
                 max-width: 100%;
-                border: 2px solid red;
+              
                 background-color: #eee;
             }
             #contenedor-principal {
