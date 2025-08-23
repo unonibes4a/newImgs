@@ -327,6 +327,7 @@
                     imgElemento.src = imageData.url;
                     imgElemento.alt = imageData.titulo;
                     imgElemento.onclick=()=>{
+                        editorgiofilter.changeImgUrl(imgElemento.src);
                         mostraridcontendoreditor();
                     }
                     
@@ -373,7 +374,7 @@
             }
 
             function inifiltergio(){
-                var editorgiofilter = new EditorImgz('idcontendoreditor');
+                  editorgiofilter = new EditorImgz('idcontendoreditor');
             }
             inifiltergio();
 
