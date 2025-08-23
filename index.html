@@ -5,15 +5,7 @@
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Galería Paginada y Aleatoria - GitHub</title>
     <script src="./gioUI.js"></script>
-    <style>
-      /*   .glfx-canvas{
-            width: 400px;
-            height: 400px;
-            max-width: 400px;
-            max-width: 400px;
-        } */
-    </style>
-<script src="./libfiltergio.js"></script>
+    <script src="libfiltergio.js"></script>
     <style>
         body {
             margin: 0;
@@ -141,10 +133,10 @@
         }
 
         .error {
-            background-color: #ff4444;
-            color: white;
+            background-color: white;
+            color: black;
             padding: 20px;
-            border-radius: 8px;
+            border: 1px solid #ccc;
             margin: 20px;
             text-align: center;
             max-width: 600px;
@@ -202,11 +194,11 @@
             font-size: 14px;
         }
 
-        /* VISTA PREVIA HOVER */
+ 
         #vista-previa-hover {
             position: fixed;
-            width: 500px;
-            height: 500px;
+            width: 700px;
+            height: 700px;
             background: white;
             box-shadow: 0 15px 35px rgba(0, 0, 0, 0.3);
             z-index: 5000;
@@ -224,12 +216,12 @@
 
         #vista-previa-hover img {
             width: 100%;
-            height: 85%;
-            object-fit: cover;
+            height: 90%;
+            object-fit: contain;
         }
 
         #vista-previa-hover .info-preview {
-            height: 15%;
+            height: 10%;
             padding: 10px;
             background: #333;
             color: white;
@@ -245,7 +237,7 @@
 <body>
         <div id="idcontendoreditor"><button id="dicloseedit" class="clbtsimpleeditors">close</button></div>
 
-    <!-- Vista previa hover -->
+  
     <div id="vista-previa-hover">
         <img id="preview-img" src="" alt="">
         <div class="info-preview" id="preview-info"></div>
@@ -274,7 +266,7 @@
             const btdicloseedit=document.getElementById("dicloseedit");
             btdicloseedit.onclick=()=>{ document.getElementById("idcontendoreditor").style.display="none";}
             
-            // Elementos para vista previa
+   
             const vistaPrevia = document.getElementById('vista-previa-hover');
             const previewImg = document.getElementById('preview-img');
             const previewInfo = document.getElementById('preview-info');
@@ -312,10 +304,10 @@
 
             }
 
-            // Función para posicionar inteligentemente la vista previa
+      
             function posicionarVistaPrevia(mouseX, mouseY, elementoRect) {
-                const previewWidth = 400;
-                const previewHeight = 400;
+                const previewWidth = 700;
+                const previewHeight = 700;
                 const margen = 20;
                 
                 const windowWidth = window.innerWidth;
@@ -323,25 +315,25 @@
                 
                 let x, y;
                 
-                // Determinar posición X
+         
                 if (mouseX < windowWidth / 2) {
-                    // Mouse en lado izquierdo, mostrar preview a la derecha
+            
                     x = elementoRect.right + margen;
                     if (x + previewWidth > windowWidth) {
                         x = windowWidth - previewWidth - margen;
                     }
                 } else {
-                    // Mouse en lado derecho, mostrar preview a la izquierda
+ 
                     x = elementoRect.left - previewWidth - margen;
                     if (x < 0) {
                         x = margen;
                     }
                 }
                 
-                // Determinar posición Y
+             
                 y = mouseY - previewHeight / 2;
                 
-                // Ajustar si se sale de los límites verticales
+          
                 if (y < margen) {
                     y = margen;
                 } else if (y + previewHeight > windowHeight - margen) {
@@ -352,7 +344,7 @@
                 vistaPrevia.style.top = y + 'px';
             }
 
-            // Función para mostrar vista previa
+ 
             function mostrarVistaPrevia(imgSrc, nombre, mouseEvent, elemento) {
                 previewImg.src = imgSrc;
                 previewInfo.textContent = nombre;
@@ -364,7 +356,7 @@
                 vistaPrevia.classList.add('visible');
             }
 
-            // Función para ocultar vista previa
+      
             function ocultarVistaPrevia(elemento) {
                 elemento.classList.remove('hover-active');
                 vistaPrevia.classList.remove('visible');
@@ -428,11 +420,8 @@
                     console.error('Error cargando imágenes desde GitHub:', error);
                     contenedor.innerHTML = `
                         <div class="error">
-                            <h3>Error cargando imágenes desde GitHub</h3>
-                            <p><strong>Error:</strong> ${error.message}</p>
-                            <p><strong>Repositorio:</strong> ${repoOwner}/${repoName}</p>
-                            <p><strong>URL API:</strong> ${githubApiUrl}</p>
-                            <p>Verifica que el repositorio sea público y contenga imágenes.</p>
+                            <h3>Error cargando imágenes</h3>
+                            <p>No se pudieron cargar las imágenes del repositorio</p>
                         </div>
                     `;
                     return [];
@@ -486,15 +475,15 @@
                     imgElemento.src = imageData.url;
                     imgElemento.alt = imageData.nombre;
                     
-                    // Click para editar
+            
                     imgElemento.onclick = () => {
-                        if(editorgiofilter) {
+                
                             editorgiofilter.changeImgUrl(imgElemento.src);
                             mostraridcontendoreditor();
-                        }
+                      
                     }
                     
-                    // Eventos hover para vista previa
+                  
                     divContenedor.onmouseenter = (e) => {
                         mostrarVistaPrevia(imageData.url, imageData.nombre, e, divContenedor);
                     };
@@ -503,7 +492,7 @@
                         ocultarVistaPrevia(divContenedor);
                     };
                     
-                    // Actualizar posición mientras se mueve el mouse
+     
                     divContenedor.onmousemove = (e) => {
                         if (vistaPrevia.classList.contains('visible')) {
                             const rect = divContenedor.getBoundingClientRect();
