@@ -47,8 +47,8 @@
         }
 
         .contenedordeiamgenes {
-            width: 250px;
-            height: 420px;
+          /*   width: 250px;
+            height: 420px; */
             background-color: #ffffff;
             display: flex;
             justify-content: center;
@@ -252,7 +252,7 @@
     </div>
 
     <div id="cargando" style="display: none;">
-        <p>Cargando imágenes desde GitHub...</p>
+        <p>load img ...</p>
     </div>
 
     <script>
@@ -306,8 +306,8 @@
 
       
             function posicionarVistaPrevia(mouseX, mouseY, elementoRect) {
-                const previewWidth = 700;
-                const previewHeight = 700;
+                const previewWidth = 500;
+                const previewHeight = 500;
                 const margen = 20;
                 
                 const windowWidth = window.innerWidth;
@@ -453,6 +453,10 @@
                 
                 console.log(`Lote actual: ${loteActual + 1} de ${totalLotes}`);
             }
+            function generarNumeroAleatorio(min, max) {
+    return Math.floor(Math.random() * (max - min + 1)) + min;
+}
+
 
             function mostrarLote() {
                 const imagenes = obtenerLoteActual();
@@ -469,8 +473,13 @@
                 imagenes.forEach(imageData => {
                     const divContenedor = document.createElement('div');
                     divContenedor.className = 'contenedordeiamgenes';
+                    let w=210;//generarNumeroAleatorio(200, 300);
+                    let h=generarNumeroAleatorio(300, 500);
+                    divContenedor.style.width=w.toString()+"px";
+                    divContenedor.style.height=h.toString()+"px"
 
                     const imgElemento = document.createElement('img');
+                    imgElemento.style.cursor
                     imgElemento.className = 'imgcontenida';
                     imgElemento.src = imageData.url;
                     imgElemento.alt = imageData.nombre;
